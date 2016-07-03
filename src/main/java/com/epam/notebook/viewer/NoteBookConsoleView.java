@@ -1,5 +1,7 @@
 package com.epam.notebook.viewer;
 
+import com.epam.notebook.entity.Note;
+import com.epam.notebook.entity.NoteBook;
 import com.epam.notebook.provider.NoteBookProvider;
 
 import java.util.Scanner;
@@ -15,37 +17,61 @@ public class NoteBookConsoleView {
 
     static String command;
 
+    static NoteBook currNB;
+
     public static void mainMenu() {
         System.out.println("Welcome to NoteBook 1.0");
         noteBookMenu();
     }
 
     public static void noteBookMenu() {
+        System.out.println("---------------------------------------");
         System.out.println("NoteBooks:");
         System.out.println("Title\tLast edit");
         System.out.println(provider.writeNoteBooks());
-        System.out.println("Write 'new [title]' to create notebook");
-        System.out.println("Write 'open [title]' to open notebook");
-        System.out.println("Write 'delete [title]' to delete notebook");
+        System.out.println("Write 'new' to create notebook");
+        System.out.println("Write 'open' to open notebook");
+        System.out.println("Write 'delete' to delete notebook");
         command = sc.next();
         parseNoteBookCommand(command);
     }
 
+    public static void noteMenu() {
+        System.out.println("---------------------------------------");
+        System.out.println("Notes:");
+        System.out.println("Title\tNote\t\tLast edit");
+        System.out.println(print(currNB));
+        System.out.println("Write 'new' to create note");
+        System.out.println("Write 'edit' to edit note");
+        System.out.println("Write 'delete' to delete note");
+        System.out.println("Write 'back' to delete note");
+        command = sc.next();
+        parseNoteCommand(command);
+    }
+
     public static void parseNoteBookCommand(String command) {
-        String[] commands = command.split("\\s+");
-        System.out.println(commands[0]);
-        switch (commands[0]) {
+        switch (command) {
             case "new": {
-                provider.addNoteBook(commands[1]);
+                System.out.println("Write title: ");
+                command = sc.next();
+                provider.addNoteBook(command);
                 noteBookMenu();
                 break;
             }
             case "open": {
-                provider.openNoteBook(commands[1]);
+                System.out.println("Write title: ");
+                command = sc.next();
+                currNB = provider.openNoteBook(command);
+                if (currNB != null){
+                    noteMenu();
+                } else {
+                    noteBookMenu();
+                }
                 break;
             }
-            case "delete": {
-                provider.deleteNoteBook(commands[1]);
+            case "delete": {System.out.println("Write title: ");
+                command = sc.next();
+                provider.deleteNoteBook(command);
                 noteBookMenu();
                 break;
             }
@@ -57,6 +83,65 @@ public class NoteBookConsoleView {
         }
     }
 
+    public static void parseNoteCommand(String command) {
+        switch (command) {
+            case "new": {
+                System.out.println("Write title: ");
+                command = sc.next();
+                System.out.println("Write note: ");
+                String note = sc.next();
+                provider.addNote(command, note, currNB);
+                noteMenu();
+                break;
+            }
+            case "edit": {
+                System.out.println("Write title: ");
+                command = sc.next();
+                System.out.println("Write note: ");
+                String note = sc.next();
+                provider.editNote(command, note, currNB);
+                noteMenu();
+                break;
+            }
+            case "delete": {
+                System.out.println("Write title: ");
+                command = sc.next();
+                provider.deleteNote(command, currNB);
+                noteMenu();
+                break;
+            }
+            case "back": {
+                noteBookMenu();
+                break;
+            }
+            default: {
+                System.out.println("Incorrect command");
+                noteMenu();
+                break;
+            }
+        }
+    }
 
+    public static StringBuilder print(NoteBook noteBook){
+        StringBuilder infoAll = new StringBuilder();
 
+        for (Note note : noteBook.getNoteList()) {
+            infoAll.append(note.getTitle() + "\t\t" + note.getNote() + "\t\t" + note.getDate() + "\n");
+        }
+
+        return infoAll;
+    }
+
+    public static StringBuilder print(String... titles){
+        StringBuilder infoAll = new StringBuilder();
+
+        for (String title : titles) {
+            for (Note note : currNB.getNoteList()) {
+                if (note.getTitle().equals(title)) {
+                    infoAll.append(note.getTitle() + "\t\t" + note.getNote() + "\t\t" + note.getDate() + "\n");
+                }
+            }
+        }
+        return infoAll;
+    }
 }

@@ -68,6 +68,7 @@ public class NoteBookProvider {
         for (NoteBook nb : nbList) {
             if (nb.getTitle().equals(title)) {
                 nbList.remove(nbList.indexOf(nb));
+                break;
             }
         }
         //System.out.println("Not found");
@@ -88,7 +89,7 @@ public class NoteBookProvider {
         return note;
     }
 
-    public Note openNote(String title, String noteStr, NoteBook noteBook) {
+    public Note editNote(String title, String noteStr, NoteBook noteBook) {
         for (Note note : noteBook.getNoteList()) {
             if (note.getTitle().equals(title)) {
                 note.setNote(noteStr);
@@ -104,6 +105,7 @@ public class NoteBookProvider {
         for (Note note : noteBook.getNoteList()) {
             if (note.getTitle().equals(title)) {
                 noteBook.getNoteList().remove(noteBook.getNoteList().indexOf(note));
+                break;
             }
         }
         //System.out.println("Not found");
