@@ -20,7 +20,11 @@ public class NoteBookProvider {
         this.nbList = nbList;
     }
 
-    public NoteBookProvider() {
+    public ArrayList<NoteBook> getNbList() {
+        return nbList;
+    }
+
+    private NoteBookProvider() {
     }
 
     public static NoteBookProvider getInstance(){

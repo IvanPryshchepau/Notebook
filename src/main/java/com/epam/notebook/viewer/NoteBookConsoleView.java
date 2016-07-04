@@ -2,6 +2,7 @@ package com.epam.notebook.viewer;
 
 import com.epam.notebook.entity.Note;
 import com.epam.notebook.entity.NoteBook;
+import com.epam.notebook.provider.DataProvider;
 import com.epam.notebook.provider.NoteBookProvider;
 
 import java.util.Scanner;
@@ -19,8 +20,11 @@ public class NoteBookConsoleView {
 
     static NoteBook currNB;
 
+    static DataProvider dataProvider = new DataProvider();
+
     public static void mainMenu() {
         System.out.println("Welcome to NoteBook 1.0");
+        dataProvider.objFromJson();
         noteBookMenu();
     }
 
@@ -32,6 +36,7 @@ public class NoteBookConsoleView {
         System.out.println("Write 'new' to create notebook");
         System.out.println("Write 'open' to open notebook");
         System.out.println("Write 'delete' to delete notebook");
+        System.out.println("Write 'exit' to close application");
         command = sc.next();
         parseNoteBookCommand(command);
     }
@@ -73,6 +78,11 @@ public class NoteBookConsoleView {
                 command = sc.next();
                 provider.deleteNoteBook(command);
                 noteBookMenu();
+                break;
+            }
+            case "exit": {
+                dataProvider.jsonForFile();
+                System.exit(0);
                 break;
             }
             default: {
