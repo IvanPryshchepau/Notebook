@@ -16,7 +16,7 @@ public class DataProvider {
         try (Writer writer = new FileWriter("Output.json")) {
             gson.toJson(NoteBookProvider.getInstance(), NoteBookProvider.class, writer);
         } catch (IOException e) {
-            e.printStackTrace();
+
         }
     }
 
@@ -24,7 +24,7 @@ public class DataProvider {
         try (Reader reader = new FileReader("Output.json")) {
             NoteBookProvider.getInstance().setNbList(gson.fromJson(reader, NoteBookProvider.class).getNbList());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("File not opened");
         }
     }
 
